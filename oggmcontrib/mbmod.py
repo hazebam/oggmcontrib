@@ -79,3 +79,28 @@ class RandomLinearMassBalance(MassBalanceModel):
 
         # Convert to units of [m s-1] (meters of ice per second)
         return mb / SEC_IN_YEAR / cfg.PARAMS['ice_density']
+        
+class CosipyMassBalance(MassBalanceModel):
+    """grabs the mass balance as calculated by cosipy. The current plan is to run a script           that will basiclly run cosipy for a year and then run OGGM hydro for a year from the          cosipy output. This will facillitate this and hopefully mean that I don't have to keep        dipping in and out of my SSD, but we'll see"""
+    def  __init__(self, gdir,**kwargs):
+        
+    import xarray as xr
+
+def load_cosipy_output(file_path):
+    """
+    Load the COSIPY output file and extract the surface mass balance data.
+
+    Parameters
+    ----------
+    file_path : str
+        Path to the COSIPY output file.
+
+    Returns
+    -------
+    xr.DataArray
+        Surface mass balance data.
+    """
+    ds = xr.open_dataset(file_path)
+    smb = ds['surfMB']
+    return smb / SEC_IN_YEAR / cfg.PARAMS['ice_density']
+
